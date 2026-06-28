@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>에어프레미아 운항본부 · 손소독티슈 불출대장</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --ap-navy:#1B2A4A; --ap-coral:#E8512A; --ap-white:#FFFFFF;
+  --ap-light-gray:#F5F5F5; --ap-mid-gray:#CCCCCC; --ap-dark-text:#333333;
+  --ap-navy-soft:#26375c; --ap-line:rgba(27,42,74,.10);
+  --ok:#1f9d57; --ok-bg:#e7f6ed;
+  --radius-sm:6px; --radius-md:12px; --radius-lg:18px;
+  --shadow:0 2px 16px rgba(27,42,74,.08);
+  --shadow-lg:0 10px 40px rgba(27,42,74,.18);
+}
+html,body{height:100%;}
+body{
+  font-family:'Pretendard','Noto Sans KR',sans-serif;
+  color:var(--ap-dark-text); background:var(--ap-light-gray);
+  line-height:1.6; -webkit-font-smoothing:antialiased;
+  min-height:100vh; min-height:100dvh;
+}
+.mono{font-family:'Montserrat',sans-serif;}
+.hidden{display:none !important;}
+button{font-family:inherit;cursor:pointer;border:none;}
+.app{max-width:760px;margin:0 auto;padding:0 16px env(safe-area-inset-bottom) 16px;}
+
+/* ===== Header ===== */
+.ap-head{
+  position:sticky;top:0;z-index:50;background:var(--ap-navy);
+  padding:calc(env(safe-area-inset-top) + 14px) 16px 14px;
+  display:flex;align-items:center;gap:12px;
+}
+.ap-head .brand{display:flex;align-items:center;gap:10px;min-width:0;}
+.ap-logo-mark{
+  width:30px;height:30px;border-radius:50%;flex:0 0 auto;position:relative;
+  background:var(--ap-white);display:flex;align-items:center;justify-content:center;
+}
+.ap-logo-mark::after{content:"";width:9px;height:9px;border-radius:50%;background:var(--ap-coral);}
+.ap-head .wm{color:var(--ap-white);min-width:0;}
+.ap-head .wm b{font-family:'Montserrat',sans-serif;font-weight:700;font-size:15px;letter-spacing:.04em;display:block;line-height:1.15;}
+.ap-head .wm span{font-size:11px;color:rgba(255,255,255,.6);letter-spacing:.08em;}
+.ap-head .role-chip{
+  margin-left:auto;font-size:11px;font-weight:600;letter-spacing:.06em;
+  color:var(--ap-white);border:1px solid rgba(255,255,255,.3);
+  padding:5px 11px;border-radius:999px;white-space:nowrap;
+}
+
+/* ===== Generic ===== */
+.eyebrow{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ap-coral);}
+.screen{padding:24px 0 40px;animation:fadeUp .45s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-weight:600;font-size:16px;border-radius:var(--radius-sm);
+  padding:15px 22px;width:100%;transition:transform .15s,background .2s,opacity .2s;
+}
+.btn:active{transform:scale(.985);}
+.btn--primary{background:var(--ap-coral);color:#fff;}
+.btn--primary:hover{background:#d44420;}
+.btn--navy{background:var(--ap-navy);color:#fff;}
+.btn--navy:hover{background:var(--ap-navy-soft);}
+.btn--ghost{background:transparent;color:var(--ap-navy);border:2px solid var(--ap-navy);}
+.btn--ghost:hover{background:var(--ap-navy);color:#fff;}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+.btn--sm{width:auto;font-size:14px;padding:10px 16px;}
+
+/* ===== Gate / role choose ===== */
+.gate{padding-top:44px;text-align:center;}
+.gate h1{font-size:26px;font-weight:700;color:var(--ap-navy);line-height:1.25;margin:14px 0 6px;}
+.gate p.sub{color:#6b7280;font-size:14px;margin-bottom:34px;}
+.role-grid{display:grid;gap:14px;}
+.role-card{
+  background:#fff;border:1px solid var(--ap-line);border-radius:var(--radius-md);
+  padding:24px 22px;text-align:left;box-shadow:var(--shadow);
+  display:flex;align-items:center;gap:18px;transition:transform .18s,box-shadow .18s;
+}
+.role-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+.role-card .ic{width:48px;height:48px;border-radius:12px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:24px;}
+.role-card.crew .ic{background:var(--ok-bg);}
+.role-card.admin .ic{background:#eef1f8;}
+.role-card .tx b{display:block;font-size:18px;color:var(--ap-navy);font-weight:700;}
+.role-card .tx span{font-size:13px;color:#6b7280;}
+.role-card .arrow{margin-left:auto;color:var(--ap-mid-gray);font-size:22px;}
+
+/* ===== Back ===== */
+.back{display:inline-flex;align-items:center;gap:6px;background:none;color:var(--ap-navy);font-size:14px;font-weight:600;padding:6px 0;margin-bottom:14px;}
+
+/* ===== Crew select ===== */
+.search-wrap{position:relative;margin-bottom:16px;}
+.search-wrap input{
+  width:100%;padding:14px 14px 14px 42px;border:1px solid var(--ap-mid-gray);
+  border-radius:var(--radius-sm);font-size:16px;background:#fff;font-family:inherit;
+}
+.search-wrap input:focus{outline:none;border-color:var(--ap-navy);}
+.search-wrap .mag{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#9ca3af;font-size:17px;}
+.crew-list{display:grid;gap:10px;}
+.crew-row{
+  background:#fff;border:1px solid var(--ap-line);border-radius:var(--radius-sm);
+  padding:14px 16px;display:flex;align-items:center;gap:14px;text-align:left;
+  transition:border-color .15s,transform .12s;
+}
+.crew-row:hover{border-color:var(--ap-navy);transform:translateY(-1px);}
+.crew-row .av{width:38px;height:38px;border-radius:50%;background:var(--ap-navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex:0 0 auto;}
+.crew-row .nm b{font-size:16px;color:var(--ap-navy);font-weight:600;}
+.crew-row .nm span{display:block;font-size:12px;color:#9ca3af;font-family:'Montserrat',sans-serif;}
+.crew-row .rk{margin-left:auto;font-size:11px;font-weight:600;color:#6b7280;background:var(--ap-light-gray);padding:4px 10px;border-radius:999px;}
+
+/* ===== Section title ===== */
+.sec-title{margin:4px 0 18px;}
+.sec-title h2{font-size:22px;font-weight:700;color:var(--ap-navy);line-height:1.25;}
+.sec-title .meta{font-size:13px;color:#6b7280;margin-top:3px;}
+
+/* ===== Quarter cards ===== */
+.q-grid{display:grid;gap:14px;}
+.q-card{
+  background:#fff;border:1px solid var(--ap-line);border-radius:var(--radius-md);
+  padding:20px;box-shadow:var(--shadow);position:relative;overflow:hidden;
+}
+.q-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--ap-mid-gray);}
+.q-card.done::before{background:var(--ok);}
+.q-card .q-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;}
+.q-card .q-label .qn{font-family:'Montserrat',sans-serif;font-weight:700;font-size:19px;color:var(--ap-navy);}
+.q-card .q-label .yr{font-size:13px;color:#9ca3af;font-family:'Montserrat',sans-serif;}
+.q-card .q-item{font-size:13px;color:#6b7280;margin-top:2px;}
+.status-pill{margin-left:auto;font-size:12px;font-weight:600;padding:6px 12px;border-radius:999px;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;}
+.status-pill.wait{background:#fff4ec;color:var(--ap-coral);}
+.status-pill.ok{background:var(--ok-bg);color:var(--ok);}
+.recv-banner{
+  background:var(--ok-bg);border-radius:var(--radius-sm);padding:12px 14px;
+  display:flex;align-items:center;gap:10px;margin-top:4px;
+}
+.recv-banner .chk{width:24px;height:24px;border-radius:50%;background:var(--ok);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex:0 0 auto;}
+.recv-banner .tx b{display:block;font-size:13px;color:#13703d;font-weight:600;}
+.recv-banner .tx span{font-size:12px;color:#2c7a4f;font-family:'Montserrat',sans-serif;}
+
+/* ===== Modal ===== */
+.overlay{position:fixed;inset:0;background:rgba(27,42,74,.55);z-index:200;display:flex;align-items:flex-end;justify-content:center;padding:0;animation:ovIn .25s ease;}
+@keyframes ovIn{from{opacity:0;}to{opacity:1;}}
+.sheet{
+  background:#fff;width:100%;max-width:560px;border-radius:18px 18px 0 0;
+  padding:22px 20px calc(env(safe-area-inset-bottom) + 22px);
+  box-shadow:0 -8px 40px rgba(0,0,0,.25);animation:sheetUp .3s cubic-bezier(.16,1,.3,1);
+  max-height:94vh;max-height:94dvh;overflow-y:auto;
+}
+@keyframes sheetUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.sheet .grab{width:40px;height:4px;border-radius:2px;background:var(--ap-mid-gray);margin:0 auto 16px;}
+.sheet h3{font-size:19px;font-weight:700;color:var(--ap-navy);text-align:center;}
+.sheet .sub{font-size:13px;color:#6b7280;text-align:center;margin:4px 0 18px;}
+.confirm-box{background:var(--ap-light-gray);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:18px;}
+.confirm-box .r{display:flex;justify-content:space-between;font-size:14px;padding:5px 0;}
+.confirm-box .r span{color:#6b7280;}
+.confirm-box .r b{color:var(--ap-navy);font-weight:600;}
+
+/* signature pad */
+.sig-label{font-size:13px;font-weight:600;color:var(--ap-navy);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+.sig-label button{font-size:12px;color:var(--ap-coral);background:none;font-weight:600;}
+.sig-frame{position:relative;border:2px dashed var(--ap-mid-gray);border-radius:var(--radius-sm);background:#fff;touch-action:none;}
+.sig-frame.signed{border-style:solid;border-color:var(--ap-navy);}
+.sig-frame canvas{display:block;width:100%;height:200px;border-radius:var(--radius-sm);}
+.sig-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#c2c8d2;font-size:14px;pointer-events:none;}
+.sheet .actions{display:flex;gap:10px;margin-top:18px;}
+.sheet .actions .btn{flex:1;}
+
+/* success pop */
+.success-pop{text-align:center;padding:8px 0 4px;}
+.success-pop .big-chk{width:72px;height:72px;border-radius:50%;background:var(--ok);color:#fff;display:flex;align-items:center;justify-content:center;font-size:38px;margin:6px auto 16px;animation:pop .4s cubic-bezier(.16,1.4,.5,1);}
+@keyframes pop{0%{transform:scale(.3);opacity:0;}100%{transform:scale(1);opacity:1;}}
+.success-pop h3{margin-bottom:4px;}
+.success-pop .ts{font-family:'Montserrat',sans-serif;font-size:15px;color:var(--ap-navy);font-weight:600;margin:14px 0 4px;}
+.success-pop .ts-label{font-size:12px;color:#9ca3af;}
+
+/* ===== Admin ===== */
+.pin-wrap{max-width:340px;margin:40px auto 0;text-align:center;}
+.pin-wrap .ic{width:60px;height:60px;border-radius:16px;background:#eef1f8;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px;}
+.pin-wrap h2{font-size:21px;color:var(--ap-navy);font-weight:700;margin-bottom:6px;}
+.pin-wrap p{font-size:13px;color:#6b7280;margin-bottom:22px;}
+.pin-input{width:100%;text-align:center;font-family:'Montserrat',sans-serif;font-size:26px;letter-spacing:.5em;padding:14px;border:1px solid var(--ap-mid-gray);border-radius:var(--radius-sm);margin-bottom:14px;}
+.pin-input:focus{outline:none;border-color:var(--ap-navy);}
+.pin-err{color:var(--ap-coral);font-size:13px;margin-bottom:14px;min-height:18px;}
+
+.admin-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px;}
+.q-select{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;}
+.q-select button{
+  flex:0 0 auto;font-size:13px;font-weight:600;padding:9px 16px;border-radius:999px;
+  background:#fff;border:1px solid var(--ap-mid-gray);color:#6b7280;white-space:nowrap;
+}
+.q-select button.active{background:var(--ap-navy);color:#fff;border-color:var(--ap-navy);}
+
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+.stat{background:#fff;border:1px solid var(--ap-line);border-radius:var(--radius-md);padding:16px 12px;text-align:center;box-shadow:var(--shadow);}
+.stat .n{font-family:'Montserrat',sans-serif;font-size:26px;font-weight:700;color:var(--ap-navy);line-height:1;}
+.stat .l{font-size:11px;color:#9ca3af;margin-top:6px;letter-spacing:.04em;}
+.stat.done .n{color:var(--ok);}
+.stat.wait .n{color:var(--ap-coral);}
+.progress{height:8px;border-radius:4px;background:var(--ap-light-gray);overflow:hidden;margin-bottom:20px;}
+.progress > i{display:block;height:100%;background:var(--ok);border-radius:4px;transition:width .5s ease;}
+
+.adm-search{margin-bottom:14px;}
+.dash-list{display:grid;gap:10px;}
+.dash-row{
+  background:#fff;border:1px solid var(--ap-line);border-radius:var(--radius-md);
+  padding:14px 16px;display:flex;align-items:center;gap:13px;box-shadow:var(--shadow);
+}
+.dash-row .av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:#fff;flex:0 0 auto;}
+.dash-row .info{min-width:0;flex:1;}
+.dash-row .info b{font-size:15px;color:var(--ap-navy);font-weight:600;}
+.dash-row .info .sub{font-size:12px;color:#9ca3af;font-family:'Montserrat',sans-serif;}
+.dash-row .st{font-size:12px;font-weight:600;padding:5px 11px;border-radius:999px;white-space:nowrap;}
+.dash-row .st.ok{background:var(--ok-bg);color:var(--ok);}
+.dash-row .st.wait{background:#fff4ec;color:var(--ap-coral);}
+.dash-row.clickable{cursor:pointer;transition:transform .12s;}
+.dash-row.clickable:hover{transform:translateY(-1px);}
+
+/* sig view modal */
+.sig-view{text-align:center;}
+.sig-view .who{font-size:18px;font-weight:700;color:var(--ap-navy);}
+.sig-view .who-sub{font-size:13px;color:#6b7280;margin-bottom:16px;}
+.sig-view .sig-img-frame{border:1px solid var(--ap-mid-gray);border-radius:var(--radius-sm);background:#fff;padding:10px;margin-bottom:14px;}
+.sig-view .sig-img-frame img{width:100%;display:block;}
+.sig-view .ts-card{background:var(--ap-light-gray);border-radius:var(--radius-sm);padding:12px 14px;display:flex;justify-content:space-between;font-size:14px;}
+.sig-view .ts-card span{color:#6b7280;}
+.sig-view .ts-card b{color:var(--ap-navy);font-family:'Montserrat',sans-serif;}
+
+.empty{text-align:center;padding:50px 20px;color:#9ca3af;}
+.empty .ic{font-size:40px;margin-bottom:10px;}
+.empty p{font-size:14px;}
+
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 20px);transform:translateX(-50%);background:var(--ap-navy);color:#fff;padding:13px 22px;border-radius:999px;font-size:14px;font-weight:600;z-index:300;box-shadow:var(--shadow-lg);animation:toastIn .3s ease;}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,12px);}to{opacity:1;transform:translate(-50%,0);}}
+
+footer{text-align:center;padding:24px 16px calc(env(safe-area-inset-bottom) + 24px);color:#9ca3af;font-size:11px;letter-spacing:.04em;}
+footer .mono{font-weight:600;color:#6b7280;}
+
+@media(max-width:380px){
+  .gate h1{font-size:23px;}
+  .stat .n{font-size:22px;}
+}
+</style>
+</head>
+<body>
+
+<div class="ap-head">
+  <div class="brand">
+    <div class="ap-logo-mark"></div>
+    <div class="wm">
+      <b>AIR PREMIA</b>
+      <span>운항본부 · 손소독티슈 불출대장</span>
+    </div>
+  </div>
+  <div id="roleChip" class="role-chip hidden"></div>
+</div>
+
+<div class="app">
+  <!-- ===== SCREEN: GATE ===== -->
+  <section id="screen-gate" class="screen gate">
+    <div class="eyebrow">FLIGHT OPERATIONS</div>
+    <h1>손소독티슈<br>불출 관리대장</h1>
+    <p class="sub">접속 유형을 선택해 주세요</p>
+    <div class="role-grid">
+      <button class="role-card crew" onclick="goCrewSelect()">
+        <div class="ic">✍️</div>
+        <div class="tx"><b>수령 확인</b><span>운항승무원 · 분기별 수령 및 전자서명</span></div>
+        <div class="arrow">›</div>
+      </button>
+      <button class="role-card admin" onclick="goAdminGate()">
+        <div class="ic">📊</div>
+        <div class="tx"><b>관리자</b><span>수령 현황 대시보드 · 서명 조회</span></div>
+        <div class="arrow">›</div>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== SCREEN: CREW SELECT ===== -->
+  <section id="screen-crew-select" class="screen hidden">
+    <button class="back" onclick="show('gate')">‹ 처음으로</button>
+    <div class="sec-title"><h2>본인 확인</h2><div class="meta">명단에서 본인을 선택해 주세요</div></div>
+    <div class="search-wrap">
+      <span class="mag">🔍</span>
+      <input id="crewSearch" type="text" placeholder="이름 또는 사번 검색" oninput="renderCrewList()">
+    </div>
+    <div id="crewList" class="crew-list"></div>
+  </section>
+
+  <!-- ===== SCREEN: CREW LOG ===== -->
+  <section id="screen-crew-log" class="screen hidden">
+    <button class="back" onclick="show('crew-select')">‹ 본인 확인</button>
+    <div class="sec-title">
+      <h2 id="crewLogName"></h2>
+      <div class="meta" id="crewLogMeta"></div>
+    </div>
+    <div id="quarterGrid" class="q-grid"></div>
+  </section>
+
+  <!-- ===== SCREEN: ADMIN GATE ===== -->
+  <section id="screen-admin-gate" class="screen hidden">
+    <button class="back" onclick="show('gate')">‹ 처음으로</button>
+    <div class="pin-wrap">
+      <div class="ic">🔒</div>
+      <h2>관리자 인증</h2>
+      <p>접근 PIN을 입력해 주세요</p>
+      <input id="pinInput" class="pin-input mono" type="password" inputmode="numeric" maxlength="6" placeholder="••••" onkeyup="if(event.key==='Enter')checkPin()">
+      <div id="pinErr" class="pin-err"></div>
+      <button class="btn btn--navy" onclick="checkPin()">확인</button>
+    </div>
+  </section>
+
+  <!-- ===== SCREEN: ADMIN DASH ===== -->
+  <section id="screen-admin-dash" class="screen hidden">
+    <button class="back" onclick="show('gate')">‹ 처음으로</button>
+    <div class="sec-title"><h2>수령 현황 대시보드</h2><div class="meta" id="dashMeta"></div></div>
+    <div class="q-select" id="qSelect"></div>
+    <div class="stat-row">
+      <div class="stat"><div class="n" id="stTotal">0</div><div class="l">대상 인원</div></div>
+      <div class="stat done"><div class="n" id="stDone">0</div><div class="l">수령 완료</div></div>
+      <div class="stat wait"><div class="n" id="stWait">0</div><div class="l">미수령</div></div>
+    </div>
+    <div class="progress"><i id="progBar" style="width:0%"></i></div>
+    <div class="search-wrap adm-search">
+      <span class="mag">🔍</span>
+      <input id="dashSearch" type="text" placeholder="이름 검색" oninput="renderDash()">
+    </div>
+    <div id="dashList" class="dash-list"></div>
+  </section>
+</div>
+
+<footer>
+  <div class="mono">AIR PREMIA · FLIGHT OPERATIONS DIVISION</div>
+  본 시스템은 운항본부 내부 관리용입니다
+</footer>
+
+<div id="modalRoot"></div>
+
+<script>
+/* =========================================================
+   데이터  — 운항승무원 명단 / 분기 설정
+   실제 운영 시 CREW 배열과 QUARTERS, 품목만 교체하면 됩니다.
+   ========================================================= */
+var YEAR = 2026;
+var QUARTERS = [
+  {id:'2026Q1', q:'1Q', year:'2026', period:'2026.01 – 03', item:'손소독티슈 1박스 (50매)'},
+  {id:'2026Q2', q:'2Q', year:'2026', period:'2026.04 – 06', item:'손소독티슈 1박스 (50매)'},
+  {id:'2026Q3', q:'3Q', year:'2026', period:'2026.07 – 09', item:'손소독티슈 1박스 (50매)'},
+  {id:'2026Q4', q:'4Q', year:'2026', period:'2026.10 – 12', item:'손소독티슈 1박스 (50매)'}
+];
+var CURRENT_Q = '2026Q2';
+var ADMIN_PIN = '1234';   // 운영 시 변경하세요
+
+var CREW = [
+  {id:'21001', name:'김도현', rank:'기장'},
+  {id:'21002', name:'박서준', rank:'기장'},
+  {id:'21003', name:'이준호', rank:'기장'},
+  {id:'21004', name:'정우성', rank:'기장'},
+  {id:'22001', name:'최민수', rank:'부기장'},
+  {id:'22002', name:'강하늘', rank:'부기장'},
+  {id:'22003', name:'윤재호', rank:'부기장'},
+  {id:'22004', name:'장명근', rank:'부기장'},
+  {id:'22005', name:'홍진영', rank:'부기장'},
+  {id:'22006', name:'송지효', rank:'부기장'}
+];
+
+/* =========================================================
+   저장소  — window.storage 공유 스코프(기기 간 동기화)
+   키 형식:  recv:<quarterId>:<crewId>  ->  {ts, sig}
+   ========================================================= */
+var memCache = {};            // 로컬 폴백 캐시
+var hasStorage = (typeof window!=='undefined' && window.storage && typeof window.storage.get==='function');
+
+async function recGet(qid, cid){
+  var key='recv:'+qid+':'+cid;
+  if(hasStorage){
+    try{ var r=await window.storage.get(key,true); return r? JSON.parse(r.value):null; }
+    catch(e){ return memCache[key]||null; }
+  }
+  return memCache[key]||null;
+}
+async function recSet(qid, cid, data){
+  var key='recv:'+qid+':'+cid;
+  memCache[key]=data;
+  if(hasStorage){
+    try{ await window.storage.set(key, JSON.stringify(data), true); }catch(e){}
+  }
+}
+async function recAll(qid){
+  // 해당 분기 전 승무원 기록을 모아 반환
+  var out={};
+  for(var i=0;i<CREW.length;i++){
+    out[CREW[i].id]= await recGet(qid, CREW[i].id);
+  }
+  return out;
+}
+
+/* =========================================================
+   화면 전환
+   ========================================================= */
+var SCREENS=['gate','crew-select','crew-log','admin-gate','admin-dash'];
+function show(name){
+  SCREENS.forEach(function(s){
+    document.getElementById('screen-'+s).classList.toggle('hidden', s!==name);
+  });
+  var chip=document.getElementById('roleChip');
+  if(name==='crew-select'||name==='crew-log'){chip.textContent='수령 확인';chip.classList.remove('hidden');}
+  else if(name==='admin-gate'||name==='admin-dash'){chip.textContent='관리자';chip.classList.remove('hidden');}
+  else chip.classList.add('hidden');
+  window.scrollTo(0,0);
+}
+
+function fmtTS(d){
+  var p=function(n){return (n<10?'0':'')+n;};
+  return d.getFullYear()+'.'+p(d.getMonth()+1)+'.'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());
+}
+function avatarColor(name){
+  var palette=['#1B2A4A','#E8512A','#2e7d5b','#5b4b8a','#3a6ea5','#a8562a'];
+  var s=0; for(var i=0;i<name.length;i++)s+=name.charCodeAt(i);
+  return palette[s%palette.length];
+}
+function initial(name){return name.charAt(0);}
+
+/* =========================================================
+   승무원 — 명단
+   ========================================================= */
+function goCrewSelect(){ document.getElementById('crewSearch').value=''; renderCrewList(); show('crew-select'); }
+function renderCrewList(){
+  var q=(document.getElementById('crewSearch').value||'').trim().toLowerCase();
+  var list=document.getElementById('crewList'); list.innerHTML='';
+  var filtered=CREW.filter(function(c){return !q || c.name.toLowerCase().indexOf(q)>=0 || c.id.indexOf(q)>=0;});
+  if(filtered.length===0){ list.innerHTML='<div class="empty"><div class="ic">🔍</div><p>일치하는 승무원이 없습니다</p></div>'; return; }
+  filtered.forEach(function(c){
+    var b=document.createElement('button'); b.className='crew-row';
+    b.innerHTML='<div class="av" style="background:'+avatarColor(c.name)+'">'+initial(c.name)+'</div>'+
+      '<div class="nm"><b>'+c.name+'</b><span>'+c.id+'</span></div>'+
+      '<div class="rk">'+c.rank+'</div>';
+    b.onclick=function(){ openCrewLog(c); };
+    list.appendChild(b);
+  });
+}
+
+/* =========================================================
+   승무원 — 분기별 불출대장
+   ========================================================= */
+var activeCrew=null;
+async function openCrewLog(c){
+  activeCrew=c;
+  document.getElementById('crewLogName').textContent=c.name+' '+c.rank;
+  document.getElementById('crewLogMeta').textContent='사번 '+c.id+' · '+YEAR+'년 분기별 불출 현황';
+  show('crew-log');
+  await renderQuarters();
+}
+async function renderQuarters(){
+  var grid=document.getElementById('quarterGrid'); grid.innerHTML='<div class="empty"><p>불러오는 중…</p></div>';
+  var rows='';
+  for(var i=0;i<QUARTERS.length;i++){
+    var Q=QUARTERS[i];
+    var rec=await recGet(Q.id, activeCrew.id);
+    var done=!!rec;
+    var banner = done
+      ? '<div class="recv-banner"><div class="chk">✓</div><div class="tx"><b>수령 완료</b><span>'+rec.ts+'</span></div></div>'
+      : '<button class="btn btn--primary" onclick="openReceiveModal(\''+Q.id+'\')">수령 확인 및 서명</button>';
+    var pill = done
+      ? '<span class="status-pill ok">✓ 수령완료</span>'
+      : '<span class="status-pill wait">미수령</span>';
+    rows+='<div class="q-card'+(done?' done':'')+'">'+
+        '<div class="q-top">'+
+          '<div class="q-label"><span class="qn">'+Q.q+'</span> <span class="yr">'+Q.year+'</span>'+
+            '<div class="q-item">'+Q.period+' · '+Q.item+'</div></div>'+
+          pill+
+        '</div>'+ banner +
+      '</div>';
+  }
+  grid.innerHTML=rows;
+}
+
+/* =========================================================
+   수령 확인 + 전자서명 모달
+   ========================================================= */
+var sigPad=null;
+function openReceiveModal(qid){
+  var Q=QUARTERS.filter(function(x){return x.id===qid;})[0];
+  var html=
+    '<div class="overlay" id="ovReceive" onclick="if(event.target===this)closeModal()">'+
+    '<div class="sheet">'+
+      '<div class="grab"></div>'+
+      '<h3>수령 확인</h3>'+
+      '<div class="sub">아래 내용을 확인하고 서명해 주세요</div>'+
+      '<div class="confirm-box">'+
+        '<div class="r"><span>수령자</span><b>'+activeCrew.name+' '+activeCrew.rank+' ('+activeCrew.id+')</b></div>'+
+        '<div class="r"><span>분기</span><b>'+Q.year+'년 '+Q.q+'</b></div>'+
+        '<div class="r"><span>품목</span><b>'+Q.item+'</b></div>'+
+      '</div>'+
+      '<div class="sig-label"><span>전자서명</span><button onclick="clearSig()">다시 서명</button></div>'+
+      '<div class="sig-frame" id="sigFrame"><canvas id="sigCanvas"></canvas><div class="sig-hint" id="sigHint">여기에 손가락 또는 펜으로 서명</div></div>'+
+      '<div class="actions">'+
+        '<button class="btn btn--ghost" onclick="closeModal()">취소</button>'+
+        '<button class="btn btn--primary" id="submitBtn" onclick="submitReceive(\''+qid+'\')" disabled>제출</button>'+
+      '</div>'+
+    '</div></div>';
+  document.getElementById('modalRoot').innerHTML=html;
+  setTimeout(initSigPad,50);
+}
+function closeModal(){ document.getElementById('modalRoot').innerHTML=''; sigPad=null; }
+
+function initSigPad(){
+  var canvas=document.getElementById('sigCanvas'); if(!canvas)return;
+  var frame=document.getElementById('sigFrame');
+  var ratio=window.devicePixelRatio||1;
+  var rect=canvas.getBoundingClientRect();
+  canvas.width=rect.width*ratio; canvas.height=rect.height*ratio;
+  var ctx=canvas.getContext('2d'); ctx.scale(ratio,ratio);
+  ctx.lineWidth=2.5; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle='#1B2A4A';
+  var drawing=false, hasInk=false, last=null;
+  function pos(e){
+    var r=canvas.getBoundingClientRect();
+    var t=e.touches?e.touches[0]:e;
+    return {x:t.clientX-r.left, y:t.clientY-r.top};
+  }
+  function start(e){e.preventDefault();drawing=true;last=pos(e);}
+  function move(e){
+    if(!drawing)return; e.preventDefault();
+    var p=pos(e);
+    ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(p.x,p.y);ctx.stroke();
+    last=p;
+    if(!hasInk){hasInk=true;document.getElementById('sigHint').style.display='none';frame.classList.add('signed');document.getElementById('submitBtn').disabled=false;}
+  }
+  function end(e){drawing=false;}
+  canvas.addEventListener('mousedown',start);canvas.addEventListener('mousemove',move);
+  window.addEventListener('mouseup',end);
+  canvas.addEventListener('touchstart',start,{passive:false});
+  canvas.addEventListener('touchmove',move,{passive:false});
+  canvas.addEventListener('touchend',end);
+  sigPad={canvas:canvas,ctx:ctx,frame:frame,
+    clear:function(){ctx.clearRect(0,0,canvas.width,canvas.height);hasInk=false;document.getElementById('sigHint').style.display='';frame.classList.remove('signed');document.getElementById('submitBtn').disabled=true;},
+    isEmpty:function(){return !hasInk;},
+    data:function(){return canvas.toDataURL('image/png');}
+  };
+}
+function clearSig(){ if(sigPad)sigPad.clear(); }
+
+async function submitReceive(qid){
+  if(!sigPad || sigPad.isEmpty()){ toast('서명을 입력해 주세요'); return; }
+  var now=new Date();
+  var tsText=fmtTS(now);
+  var data={ ts:tsText, iso:now.toISOString(), sig:sigPad.data(), name:activeCrew.name, rank:activeCrew.rank, cid:activeCrew.id };
+  await recSet(qid, activeCrew.id, data);
+  showSuccess(qid, tsText);
+}
+
+function showSuccess(qid, tsText){
+  var Q=QUARTERS.filter(function(x){return x.id===qid;})[0];
+  var html=
+    '<div class="overlay" id="ovSuccess">'+
+    '<div class="sheet">'+
+      '<div class="grab"></div>'+
+      '<div class="success-pop">'+
+        '<div class="big-chk">✓</div>'+
+        '<h3>수령이 확인되었습니다</h3>'+
+        '<div class="sub">'+Q.year+'년 '+Q.q+' · '+Q.item+'</div>'+
+        '<div class="ts">'+tsText+'</div>'+
+        '<div class="ts-label">수령 일시</div>'+
+      '</div>'+
+      '<div class="actions" style="margin-top:22px;">'+
+        '<button class="btn btn--navy" onclick="finishSuccess()">확인</button>'+
+      '</div>'+
+    '</div></div>';
+  document.getElementById('modalRoot').innerHTML=html;
+  sigPad=null;
+}
+async function finishSuccess(){ closeModal(); await renderQuarters(); }
+
+/* =========================================================
+   관리자 — 인증
+   ========================================================= */
+function goAdminGate(){ document.getElementById('pinInput').value=''; document.getElementById('pinErr').textContent=''; show('admin-gate'); setTimeout(function(){document.getElementById('pinInput').focus();},200); }
+function checkPin(){
+  var v=document.getElementById('pinInput').value;
+  if(v===ADMIN_PIN){ openAdminDash(); }
+  else{ document.getElementById('pinErr').textContent='PIN이 올바르지 않습니다'; document.getElementById('pinInput').value=''; }
+}
+
+/* =========================================================
+   관리자 — 대시보드
+   ========================================================= */
+var dashQ = CURRENT_Q;
+var dashData = {};
+async function openAdminDash(){
+  dashQ=CURRENT_Q;
+  show('admin-dash');
+  renderQSelect();
+  await loadDash();
+}
+function renderQSelect(){
+  var wrap=document.getElementById('qSelect'); wrap.innerHTML='';
+  QUARTERS.forEach(function(Q){
+    var b=document.createElement('button');
+    b.textContent=Q.year+' '+Q.q;
+    b.className=(Q.id===dashQ?'active':'');
+    b.onclick=function(){ dashQ=Q.id; renderQSelect(); loadDash(); };
+    wrap.appendChild(b);
+  });
+}
+async function loadDash(){
+  document.getElementById('dashList').innerHTML='<div class="empty"><p>불러오는 중…</p></div>';
+  dashData = await recAll(dashQ);
+  var Q=QUARTERS.filter(function(x){return x.id===dashQ;})[0];
+  document.getElementById('dashMeta').textContent=Q.year+'년 '+Q.q+' · '+Q.period;
+  var total=CREW.length, done=0;
+  CREW.forEach(function(c){ if(dashData[c.id])done++; });
+  document.getElementById('stTotal').textContent=total;
+  document.getElementById('stDone').textContent=done;
+  document.getElementById('stWait').textContent=total-done;
+  document.getElementById('progBar').style.width=(total?Math.round(done/total*100):0)+'%';
+  renderDash();
+}
+function renderDash(){
+  var q=(document.getElementById('dashSearch').value||'').trim().toLowerCase();
+  var list=document.getElementById('dashList'); list.innerHTML='';
+  var rows=CREW.filter(function(c){return !q||c.name.toLowerCase().indexOf(q)>=0||c.id.indexOf(q)>=0;});
+  if(rows.length===0){ list.innerHTML='<div class="empty"><div class="ic">🔍</div><p>일치하는 승무원이 없습니다</p></div>'; return; }
+  rows.forEach(function(c){
+    var rec=dashData[c.id];
+    var row=document.createElement('div');
+    row.className='dash-row'+(rec?' clickable':'');
+    var st = rec
+      ? '<div class="st ok">✓ 수령</div>'
+      : '<div class="st wait">미수령</div>';
+    var sub = rec ? rec.ts : '서명 대기 중';
+    row.innerHTML='<div class="av" style="background:'+avatarColor(c.name)+'">'+initial(c.name)+'</div>'+
+      '<div class="info"><b>'+c.name+' '+c.rank+'</b><div class="sub">'+sub+'</div></div>'+ st;
+    if(rec){ row.onclick=function(){ viewSignature(c, rec); }; }
+    list.appendChild(row);
+  });
+}
+
+function viewSignature(c, rec){
+  var Q=QUARTERS.filter(function(x){return x.id===dashQ;})[0];
+  var html=
+    '<div class="overlay" id="ovSig" onclick="if(event.target===this)closeModal()">'+
+    '<div class="sheet">'+
+      '<div class="grab"></div>'+
+      '<div class="sig-view">'+
+        '<div class="who">'+c.name+' '+c.rank+'</div>'+
+        '<div class="who-sub">사번 '+c.id+' · '+Q.year+'년 '+Q.q+'</div>'+
+        '<div class="sig-img-frame"><img src="'+rec.sig+'" alt="전자서명"></div>'+
+        '<div class="ts-card"><span>수령 일시</span><b>'+rec.ts+'</b></div>'+
+      '</div>'+
+      '<div class="actions" style="margin-top:18px;">'+
+        '<button class="btn btn--navy" onclick="closeModal()">닫기</button>'+
+      '</div>'+
+    '</div></div>';
+  document.getElementById('modalRoot').innerHTML=html;
+}
+
+/* =========================================================
+   유틸
+   ========================================================= */
+function toast(msg){
+  var t=document.createElement('div'); t.className='toast'; t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(function(){ t.style.opacity='0'; t.style.transition='opacity .3s'; setTimeout(function(){t.remove();},300); },1800);
+}
+
+show('gate');
+</script>
+</body>
+</html>
